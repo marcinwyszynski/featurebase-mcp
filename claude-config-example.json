@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "featurebase": {
+      "command": "node",
+      "args": ["/absolute/path/to/featurebase-mcp/build/index.js"],
+      "env": {
+        "FEATUREBASE_API_KEY": "your-api-key-here"
+      }
+    }
+  }
+}
