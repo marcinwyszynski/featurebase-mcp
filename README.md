@@ -1,5 +1,7 @@
 # Featurebase MCP Server
 
+[![smithery badge](https://smithery.ai/badge/@marcinwyszynski/featurebase-mcp)](https://smithery.ai/server/@marcinwyszynski/featurebase-mcp)
+
 A Model Context Protocol (MCP) server that provides access to the Featurebase API for managing posts and comments.
 
 ## Features
@@ -37,7 +39,7 @@ npm install -g featurebase-mcp
 ### From Source
 
 ```bash
-git clone https://github.com/yourusername/featurebase-mcp.git
+git clone https://github.com/marcinwyszynski/featurebase-mcp.git
 cd featurebase-mcp
 npm install
 npm run build
