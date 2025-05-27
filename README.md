@@ -1,4 +1,5 @@
 # Featurebase MCP Server
+[![smithery badge](https://smithery.ai/badge/featurebase-mcp)](https://smithery.ai/server/featurebase-mcp)
 
 A Model Context Protocol (MCP) server that provides access to the Featurebase API for managing posts and comments.
 
@@ -21,6 +22,12 @@ A Model Context Protocol (MCP) server that provides access to the Featurebase AP
 ## Installation
 
 ### From Smithery (Recommended)
+
+To install featurebase-mcp for Claude Desktop automatically via [Smithery](https://smithery.ai/server/featurebase-mcp):
+
+```bash
+npx -y @smithery/cli install @marcinwyszynski/featurebase-mcp --client claude
+```
 
 Once published to Smithery, users can install the server easily:
 
@@ -253,7 +260,7 @@ npm run dev
 ## Publishing
 
 This server is available on:
-- [Smithery](https://smithery.ai/server/featurebase) - MCP server registry
+- [Smithery](https://smithery.ai/server/featurebase-mcp) - MCP server registry
 - [npm](https://www.npmjs.com/package/featurebase-mcp) - Node package manager
 
 For publishing instructions, see [PUBLISHING.md](./PUBLISHING.md).
