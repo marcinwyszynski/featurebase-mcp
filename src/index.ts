@@ -416,6 +416,7 @@ class FeaturebaseMCPServer {
             const result = await this.api.listPosts(args as any);
             const filtered = {
               results: result.results?.map((post: any) => ({
+                id: post.id,
                 title: post.title,
                 content: post.content,
                 author: post.author,
@@ -479,7 +480,7 @@ class FeaturebaseMCPServer {
           }
 
           case 'delete_post': {
-            const { apiKey, id } = args as any;
+            const { id } = args as any;
             const result = await this.api.deletePost(id);
             return {
               content: [
@@ -521,7 +522,7 @@ class FeaturebaseMCPServer {
           }
 
           case 'add_upvoter': {
-            const { apiKey, id, email, name } = args as any;
+            const { id, email, name } = args as any;
             const result = await this.api.addUpvoter(id, email, name);
             return {
               content: [
@@ -603,7 +604,7 @@ class FeaturebaseMCPServer {
           }
 
           case 'delete_comment': {
-            const { apiKey, id } = args as any;
+            const { id } = args as any;
             const result = await this.api.deleteComment(id);
             return {
               content: [
