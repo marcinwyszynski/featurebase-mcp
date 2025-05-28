@@ -15,72 +15,6 @@ interface FeaturebaseConfig {
   baseUrl?: string;
 }
 
-interface PostModel {
-  id: string;
-  slug: string;
-  title: string;
-  content: string;
-  author: string;
-  authorId: string;
-  authorEmail?: string;
-  commentsAllowed: boolean;
-  organization: string;
-  upvotes: number;
-  postCategory: {
-    category: string;
-    private: boolean;
-    id: string;
-  };
-  postStatus?: {
-    name: string;
-    color: string;
-    type: string;
-    isDefault: boolean;
-    id: string;
-  };
-  date: string;
-  comments: string[];
-  postTags?: Array<{
-    name: string;
-    color: string;
-    private: boolean;
-    id: string;
-  }>;
-  inReview: boolean;
-  lastUpvoted?: string;
-  ratingCount?: number;
-  averageRating?: number;
-  eta?: string;
-  linearIssueId?: string;
-  linearIssueUrl?: string;
-  jiraIssueId?: string;
-  jiraIssueUrl?: string;
-  metadata?: Record<string, any>;
-}
-
-interface CommentModel {
-  id: string;
-  content: string;
-  author: string;
-  authorId: string;
-  authorPicture?: string;
-  isPrivate: boolean;
-  isDeleted: boolean;
-  upvotes: number;
-  downvotes: number;
-  score: number;
-  submission?: string;
-  changelog?: string;
-  parentComment?: string;
-  path: string;
-  replies?: CommentModel[];
-  organization: string;
-  createdAt: string;
-  postStatus?: string;
-  inReview: boolean;
-  pinned: boolean;
-}
-
 class FeaturebaseAPI {
   private client: AxiosInstance;
 
@@ -480,11 +414,35 @@ class FeaturebaseMCPServer {
           // Posts handlers
           case 'list_posts': {
             const result = await this.api.listPosts(args as any);
+            const filtered = {
+              results: result.results?.map((post: any) => ({
+                title: post.title,
+                content: post.content,
+                author: post.author,
+                organization: post.organization,
+                upvotes: post.upvotes,
+                postCategory: {
+                  category: post.postCategory?.category
+                },
+                postTags: post.postTags?.map((tag: any) => ({
+                  name: tag.name
+                })),
+                postStatus: {
+                  name: post.postStatus?.name
+                },
+                date: post.date,
+                lastModified: post.lastModified
+              })) || [],
+              page: result.page,
+              limit: result.limit,
+              totalPages: result.totalPages,
+              totalResults: result.totalResults
+            };
             return {
               content: [
                 {
                   type: 'text',
-                  text: JSON.stringify(result, null, 2),
+                  text: JSON.stringify(filtered, null, 2),
                 },
               ],
             };
@@ -492,11 +450,17 @@ class FeaturebaseMCPServer {
 
           case 'create_post': {
             const result = await this.api.createPost(args as any);
+            const filtered = {
+              success: result.success,
+              submission: {
+                id: result.submission?.id
+              }
+            };
             return {
               content: [
                 {
                   type: 'text',
-                  text: JSON.stringify(result, null, 2),
+                  text: JSON.stringify(filtered, null, 2),
                 },
               ],
             };
@@ -530,11 +494,27 @@ class FeaturebaseMCPServer {
           case 'get_post_upvoters': {
             const { submissionId, page = 1, limit = 10 } = args as any;
             const result = await this.api.getPostUpvoters(submissionId, page, limit);
+            const filtered = {
+              results: result.results?.map((upvoter: any) => ({
+                userId: upvoter.userId,
+                organizationId: upvoter.organizationId,
+                companies: upvoter.companies?.map((company: any) => ({
+                  id: company.id,
+                  name: company.name
+                })),
+                email: upvoter.email,
+                name: upvoter.name
+              })) || [],
+              page: result.page,
+              limit: result.limit,
+              totalPages: result.totalPages,
+              totalResults: result.totalResults
+            };
             return {
               content: [
                 {
                   type: 'text',
-                  text: JSON.stringify(result, null, 2),
+                  text: JSON.stringify(filtered, null, 2),
                 },
               ],
             };
@@ -556,11 +536,37 @@ class FeaturebaseMCPServer {
           // Comments handlers
           case 'get_comments': {
             const result = await this.api.getComments(args as any);
+            const filtered = {
+              results: result.results?.map((comment: any) => ({
+                organization: comment.organization,
+                author: comment.author,
+                authorId: comment.authorId,
+                isPrivate: comment.isPrivate,
+                upvotes: comment.upvotes,
+                content: comment.content,
+                createdAt: comment.createdAt,
+                id: comment.id,
+                replies: comment.replies?.map((reply: any) => ({
+                  organization: reply.organization,
+                  author: reply.author,
+                  authorId: reply.authorId,
+                  isPrivate: reply.isPrivate,
+                  upvotes: reply.upvotes,
+                  content: reply.content,
+                  createdAt: reply.createdAt,
+                  id: reply.id
+                })) || []
+              })) || [],
+              page: result.page,
+              limit: result.limit,
+              totalPages: result.totalPages,
+              totalResults: result.totalResults
+            };
             return {
               content: [
                 {
                   type: 'text',
-                  text: JSON.stringify(result, null, 2),
+                  text: JSON.stringify(filtered, null, 2),
                 },
               ],
             };
@@ -568,11 +574,17 @@ class FeaturebaseMCPServer {
 
           case 'create_comment': {
             const result = await this.api.createComment(args as any);
+            const filtered = {
+              success: result.success,
+              comment: {
+                id: result.comment?.id
+              }
+            };
             return {
               content: [
                 {
                   type: 'text',
-                  text: JSON.stringify(result, null, 2),
+                  text: JSON.stringify(filtered, null, 2),
                 },
               ],
             };
