@@ -11,6 +11,8 @@ import {
 import axios, { AxiosInstance } from "axios";
 import mask from "json-mask";
 
+const commentModel = "upvoted, downvoted, inReview, isSpam, pinned, emailSent, sendNotification, organization, submission, author, authorId, authorPicture, isPrivate, isDeleted, confidenceScore, content, upvotes, downvotes, score, parentComment, path, createdAt, updatedAt, id";
+
 interface FeaturebaseConfig {
   apiKey: string;
   baseUrl?: string;
@@ -189,7 +191,7 @@ class FeaturebaseMCPServer {
         {
           name: "list_posts",
           description:
-            "List posts with optional filtering. Available fields: id, title, content, author(name,email), organization(name), upvotes, postCategory(category), postTags(name), postStatus(name), date, lastModified",
+            "List posts with optional filtering. Available fields: id, title, content, author, authorId, authorPicture, commentsAllowed, organization, upvotes, upvoted, postCategory(category,private,prefill,roles,hiddenFromRoles,id), postTags(name,color,private,id), postStatus(name,color,type,isDefault,id), date, lastModified, comments, isSubscribed, inReview, lastDraggedTimestamps",
           inputSchema: {
             type: "object",
             properties: {
@@ -357,7 +359,7 @@ class FeaturebaseMCPServer {
         {
           name: "get_comments",
           description:
-            "Get comments for a post or changelog. Available fields: id, content, author(name,email), authorId, organization(name), isPrivate, upvotes, createdAt, replies(id,content,author(name),upvotes)",
+            `Get comments for a post or changelog. Available fields: ${commentModel}, replies(${commentModel})`,
           inputSchema: {
             type: "object",
             properties: {
@@ -505,7 +507,7 @@ class FeaturebaseMCPServer {
               content: [
                 {
                   type: "text",
-                  text: JSON.stringify(filtered, null, 2),
+                  text: JSON.stringify(filtered),
                 },
               ],
             };
@@ -523,7 +525,7 @@ class FeaturebaseMCPServer {
               content: [
                 {
                   type: "text",
-                  text: JSON.stringify(filtered, null, 2),
+                  text: JSON.stringify(filtered),
                 },
               ],
             };
@@ -535,7 +537,7 @@ class FeaturebaseMCPServer {
               content: [
                 {
                   type: "text",
-                  text: JSON.stringify(result, null, 2),
+                  text: JSON.stringify(result),
                 },
               ],
             };
@@ -548,7 +550,7 @@ class FeaturebaseMCPServer {
               content: [
                 {
                   type: "text",
-                  text: JSON.stringify(result, null, 2),
+                  text: JSON.stringify(result),
                 },
               ],
             };
@@ -582,7 +584,7 @@ class FeaturebaseMCPServer {
               content: [
                 {
                   type: "text",
-                  text: JSON.stringify(filtered, null, 2),
+                  text: JSON.stringify(filtered),
                 },
               ],
             };
@@ -595,7 +597,7 @@ class FeaturebaseMCPServer {
               content: [
                 {
                   type: "text",
-                  text: JSON.stringify(result, null, 2),
+                  text: JSON.stringify(result),
                 },
               ],
             };
@@ -619,7 +621,7 @@ class FeaturebaseMCPServer {
               content: [
                 {
                   type: "text",
-                  text: JSON.stringify(filtered, null, 2),
+                  text: JSON.stringify(filtered),
                 },
               ],
             };
@@ -637,7 +639,7 @@ class FeaturebaseMCPServer {
               content: [
                 {
                   type: "text",
-                  text: JSON.stringify(filtered, null, 2),
+                  text: JSON.stringify(filtered),
                 },
               ],
             };
@@ -649,7 +651,7 @@ class FeaturebaseMCPServer {
               content: [
                 {
                   type: "text",
-                  text: JSON.stringify(result, null, 2),
+                  text: JSON.stringify(result),
                 },
               ],
             };
@@ -662,7 +664,7 @@ class FeaturebaseMCPServer {
               content: [
                 {
                   type: "text",
-                  text: JSON.stringify(result, null, 2),
+                  text: JSON.stringify(result),
                 },
               ],
             };
