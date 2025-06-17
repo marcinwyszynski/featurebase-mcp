@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/marcinwyszynski-featurebase-mcp-badge.png)](https://mseep.ai/app/marcinwyszynski-featurebase-mcp)
+
 # Featurebase MCP Server
 
 [![smithery badge](https://smithery.ai/badge/@marcinwyszynski/featurebase-mcp)](https://smithery.ai/server/@marcinwyszynski/featurebase-mcp)
