@@ -44,6 +44,8 @@ tools:
     description: Update an existing comment
   - name: delete_comment
     description: Delete a comment
+  - name: resolve_post_slug
+    description: Convert a post slug to post ID and get post details
 
 config:
   env:
@@ -53,6 +55,9 @@ config:
       secret: true
     FEATUREBASE_BASE_URL:
       description: "Optional: Override the default API base URL"
+      required: false
+    FEATUREBASE_ORG_URL:
+      description: "Optional: Your organization's FeatureBase URL (required for resolve_post_slug tool)"
       required: false
 
 requirements:

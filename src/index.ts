@@ -16,10 +16,12 @@ const commentModel = "upvoted, downvoted, inReview, isSpam, pinned, emailSent, s
 interface FeaturebaseConfig {
   apiKey: string;
   baseUrl?: string;
+  orgUrl?: string;
 }
 
 class FeaturebaseAPI {
   private client: AxiosInstance;
+  private orgUrl: string;
 
   constructor(config: FeaturebaseConfig) {
     this.client = axios.create({
@@ -29,6 +31,7 @@ class FeaturebaseAPI {
         "Content-Type": "application/json",
       },
     });
+    this.orgUrl = config.orgUrl || "";
   }
 
   // Posts endpoints
@@ -105,6 +108,16 @@ class FeaturebaseAPI {
     return response.data;
   }
 
+  async resolvePostSlug(slug: string) {
+    if (!this.orgUrl) {
+      throw new Error("FEATUREBASE_ORG_URL environment variable is required for slug resolution");
+    }
+    const response = await axios.get(`${this.orgUrl}/api/v1/submission`, {
+      params: { slug },
+    });
+    return response.data;
+  }
+
   // Comments endpoints
   async getComments(params: {
     submissionId?: string;
@@ -167,7 +180,8 @@ class FeaturebaseMCPServer {
     }
 
     const baseUrl = process.env.FEATUREBASE_BASE_URL;
-    this.api = new FeaturebaseAPI({ apiKey, baseUrl });
+    const orgUrl = process.env.FEATUREBASE_ORG_URL;
+    this.api = new FeaturebaseAPI({ apiKey, baseUrl, orgUrl });
 
     this.server = new Server(
       {
@@ -482,6 +496,20 @@ class FeaturebaseMCPServer {
             required: ["id"],
           },
         },
+        {
+          name: "resolve_post_slug",
+          description: "Convert a post slug to post ID and get post details",
+          inputSchema: {
+            type: "object",
+            properties: {
+              slug: { 
+                type: "string", 
+                description: "Post slug from URL (e.g., 'spacectl-stack-local-preview-target')" 
+              },
+            },
+            required: ["slug"],
+          },
+        },
       ],
     }));
 
@@ -660,6 +688,19 @@ class FeaturebaseMCPServer {
           case "delete_comment": {
             const { id } = args as any;
             const result = await this.api.deleteComment(id);
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: JSON.stringify(result),
+                },
+              ],
+            };
+          }
+
+          case "resolve_post_slug": {
+            const { slug } = args as any;
+            const result = await this.api.resolvePostSlug(slug);
             return {
               content: [
                 {

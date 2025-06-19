@@ -63,7 +63,8 @@ Add this server to your Claude Desktop configuration file:
       "command": "npx",
       "args": ["featurebase-mcp"],
       "env": {
-        "FEATUREBASE_API_KEY": "your-api-key-here"
+        "FEATUREBASE_API_KEY": "your-api-key-here",
+        "FEATUREBASE_ORG_URL": "https://your-org.featurebase.app"
       }
     }
   }
@@ -78,7 +79,8 @@ Add this server to your Claude Desktop configuration file:
     "featurebase": {
       "command": "featurebase-mcp",
       "env": {
-        "FEATUREBASE_API_KEY": "your-api-key-here"
+        "FEATUREBASE_API_KEY": "your-api-key-here",
+        "FEATUREBASE_ORG_URL": "https://your-org.featurebase.app"
       }
     }
   }
@@ -94,7 +96,8 @@ Add this server to your Claude Desktop configuration file:
       "command": "node",
       "args": ["/path/to/featurebase-mcp/build/index.js"],
       "env": {
-        "FEATUREBASE_API_KEY": "your-api-key-here"
+        "FEATUREBASE_API_KEY": "your-api-key-here",
+        "FEATUREBASE_ORG_URL": "https://your-org.featurebase.app"
       }
     }
   }
@@ -108,13 +111,22 @@ Add this server to your Claude Desktop configuration file:
 3. Generate an API key
 4. Keep it secure - never commit it to version control
 
-### Setting the API Key
+### Environment Variables
 
-The server requires the `FEATUREBASE_API_KEY` environment variable to be set. You can:
+The server requires these environment variables:
 
-1. Set it in your Claude Desktop configuration (recommended)
-2. Export it in your shell: `export FEATUREBASE_API_KEY="your-api-key-here"`
-3. Set it when running the server: `FEATUREBASE_API_KEY="your-api-key-here" npx featurebase-mcp`
+#### Required
+- `FEATUREBASE_API_KEY`: Your FeatureBase API key
+
+#### Optional  
+- `FEATUREBASE_ORG_URL`: Your organization's FeatureBase URL (e.g., "https://feedback.spacelift.io"). Required only if using `resolve_post_slug` tool.
+- `FEATUREBASE_BASE_URL`: Custom API base URL (defaults to "https://do.featurebase.app/v2")
+
+You can set them:
+
+1. In your Claude Desktop configuration (recommended)
+2. Export in your shell: `export FEATUREBASE_API_KEY="your-api-key-here"`
+3. When running the server: `FEATUREBASE_API_KEY="your-api-key-here" npx featurebase-mcp`
 
 ## Available Tools
 
@@ -186,6 +198,14 @@ Parameters:
 - `id` (required): Post ID
 - `email` (required): Upvoter's email
 - `name` (required): Upvoter's name
+
+#### `resolve_post_slug`
+Convert a post slug to post ID and get complete post details.
+
+Parameters:
+- `slug` (required): Post slug from URL (e.g., "spacectl-stack-local-preview-target")
+
+Returns the complete post data including ID, title, content, and metadata.
 
 ### Comments
 
