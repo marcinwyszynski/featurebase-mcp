@@ -207,6 +207,15 @@ Parameters:
 
 Returns the complete post data including ID, title, content, and metadata.
 
+#### `get_similar_submissions`
+Find posts similar to the given query text.
+
+Parameters:
+- `query` (required): Search query text to find similar submissions
+- `locale`: Locale for search (default: "en")
+
+Returns a list of similar posts based on content similarity.
+
 ### Comments
 
 #### `get_comments`

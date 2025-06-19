@@ -46,6 +46,8 @@ tools:
     description: Delete a comment
   - name: resolve_post_slug
     description: Convert a post slug to post ID and get post details
+  - name: get_similar_submissions
+    description: Find posts similar to the given query text
 
 config:
   env:

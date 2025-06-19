@@ -118,6 +118,16 @@ class FeaturebaseAPI {
     return response.data;
   }
 
+  async getSimilarSubmissions(query: string, locale: string = "en") {
+    if (!this.orgUrl) {
+      throw new Error("FEATUREBASE_ORG_URL environment variable is required for similar submissions");
+    }
+    const response = await axios.get(`${this.orgUrl}/api/v1/submission/getSimilarSubmissions`, {
+      params: { query, locale },
+    });
+    return response.data;
+  }
+
   // Comments endpoints
   async getComments(params: {
     submissionId?: string;
@@ -510,6 +520,24 @@ class FeaturebaseMCPServer {
             required: ["slug"],
           },
         },
+        {
+          name: "get_similar_submissions",
+          description: "Find posts similar to the given query text",
+          inputSchema: {
+            type: "object",
+            properties: {
+              query: { 
+                type: "string", 
+                description: "Search query text to find similar submissions" 
+              },
+              locale: { 
+                type: "string", 
+                description: "Locale for search (default: 'en')" 
+              },
+            },
+            required: ["query"],
+          },
+        },
       ],
     }));
 
@@ -701,6 +729,19 @@ class FeaturebaseMCPServer {
           case "resolve_post_slug": {
             const { slug } = args as any;
             const result = await this.api.resolvePostSlug(slug);
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: JSON.stringify(result),
+                },
+              ],
+            };
+          }
+
+          case "get_similar_submissions": {
+            const { query, locale = "en" } = args as any;
+            const result = await this.api.getSimilarSubmissions(query, locale);
             return {
               content: [
                 {
